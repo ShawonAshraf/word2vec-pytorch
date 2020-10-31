@@ -101,7 +101,7 @@ class Preprocessor(object):
                 encoded_context.append(self.__one_hot_encode_word(ctx))
             contexts.append(encoded_context)
 
-        return focus_words, contexts
+        return np.asarray(focus_words), np.asarray(contexts)
 
     def __pipeline(self):
         self.__read_corpus_from_file()
