@@ -99,9 +99,9 @@ class Preprocessor(object):
             encoded_context = []
             for ctx in context:
                 encoded_context.append(self.__one_hot_encode_word(ctx))
-            contexts.append(encoded_context)
+            contexts.append(np.array(encoded_context))
 
-        return np.asarray(focus_words), np.asarray(contexts)
+        return focus_words, contexts
 
     def __pipeline(self):
         self.__read_corpus_from_file()
