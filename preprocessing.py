@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import numpy as np
 
 
 class Preprocessor(object):
@@ -80,13 +81,36 @@ class Preprocessor(object):
         df = pd.DataFrame(data, columns=columns)
         return df
 
+    def __one_hot_encode_word(self, word):
+        one_hot = np.zeros(len(self.vocabulary))
+        word_idx_in_vocab = self.int_labels[word]
+        one_hot[word_idx_in_vocab] = 1
+
+        return one_hot
+
+    def __one_hot_encode_df(self, df):
+        focus_words = []
+        contexts = []
+
+        for focus_word, context in zip(df["focus_word"], df["context"]):
+            focus_words.append(self.__one_hot_encode_word(focus_word))
+
+            # for context words
+            encoded_context = []
+            for ctx in context:
+                encoded_context.append(self.__one_hot_encode_word(ctx))
+            contexts.append(encoded_context)
+
+        return focus_words, contexts
+
     def __pipeline(self):
         self.__read_corpus_from_file()
         self.__clean()
         self.__build_vocabulary()
 
         data_frame = self.__generate_data()
-        return data_frame
+        focus_words, contexts = self.__one_hot_encode_df(df=data_frame)
+        return data_frame, focus_words, contexts
 
     def run(self):
         return self.__pipeline()
