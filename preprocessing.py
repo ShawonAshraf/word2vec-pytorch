@@ -3,7 +3,7 @@ import pandas as pd
 
 class Preprocessor(object):
     def __init__(self, dimensions):
-        self.corpus_file_path = "../data/data.txt"
+        self.corpus_file_path = "data/data.txt"
         self.corpus = []
         self.vocabulary = set()
 
