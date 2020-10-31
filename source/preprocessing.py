@@ -67,10 +67,12 @@ class Preprocessor(object):
         data = []
         for s in tokenized_sentences:
             for idx, word in enumerate(s):
-                # find neighboring words based on the dimensions (how many words to relate to)
+                # find neighboring words / context based on the dimensions (how many words to relate to)
+                context = []
                 for neighbor in s[max(idx - self.dimensions, 0): min(idx + self.dimensions, len(s) + 1)]:
                     if neighbor != word:
-                        data.append([word, neighbor])
+                        context.append(neighbor)
+                data.append([word, context])
 
         columns = ["focus_word", "context"]
         df = pd.DataFrame(data, columns=columns)
