@@ -37,17 +37,18 @@ class Preprocessor(object):
         # update
         self.corpus = cleaned_corpus
 
-    def __remove_period(self):
+    def __remove_punc(self):
         cpr = []
         for text in self.corpus:
-            cpr.append(text.replace(".", ""))
+            tmp = text.replace(",", "")
+            cpr.append(tmp.replace(".", ""))
 
         # update
         self.corpus = cpr
 
     def __clean(self):
         self.__remove_stop_words()
-        self.__remove_period()
+        self.__remove_punc()
 
     def __build_vocabulary(self):
         for text in self.corpus:
