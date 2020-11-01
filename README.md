@@ -8,8 +8,14 @@ A simple, barebone, basic, newb implementation of word2vec using pytorch.
 - Cross Entropy as Loss function
 
 ## run
-First set up a ``conda`` environment using the file `snek.yml`. Then run `main.py`.
+First set up a ``conda`` environment using the file `snek.yml`. 
 
+```bash
+conda env create --file snek.yml
+```
+
+
+Then run `main.py`.
 ```bash
 python main.py
 ```
@@ -24,8 +30,6 @@ Word2VecNetwork(
 )
 =================
 Device : cpu
-
-Model already exists! Skipping training
 
 Preparing vectors
 ======================================
