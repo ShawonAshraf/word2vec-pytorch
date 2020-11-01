@@ -7,7 +7,7 @@ class Preprocessor(object):
     def __init__(self, dimensions):
         self.corpus_file_path = os.path.join(os.getcwd(), "data", "data.txt")
         self.corpus = []
-        self.vocabulary = set()
+        self.vocabulary = []
 
         self.dimensions = dimensions
 
@@ -56,7 +56,8 @@ class Preprocessor(object):
             tokens = text.split()
             for token in tokens:
                 # add to vocabulary
-                self.vocabulary.add(token)
+                if token not in self.vocabulary:
+                    self.vocabulary.append(token)
 
     def __generate_data(self):
         # assign the index to word as an int label
