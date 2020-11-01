@@ -24,7 +24,9 @@ def who_is_wayne(m):
 
     b1 = model.layer1.bias
 
-    # word vectors
+    # word vectors we're looking for from word2vec
+    # are actually the backprop updated weights and biases of the
+    # hidden layer
     vectors = w1 + b1
 
     print("")
