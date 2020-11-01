@@ -38,10 +38,12 @@ def train(input_dimension, embedding_dimension, learning_rate, focus_words, cont
     print("=================")
     print(model)
     print("=================")
+    print(f"Device : {device}")
     print()
 
     # if the model already exists on disk and tr is false, just return it!
     if os.path.exists("model.ckpt") and tr is False:
+        print("Model already exists! Skipping training")
         model.load_state_dict(torch.load("model.ckpt"))
         return model
 
