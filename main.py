@@ -15,20 +15,31 @@ model = train(
     tr=False
 )
 
+
 # check for similarity between batman and wayne vs joker and wayne
-w1 = model.layer1.weight
-# stack to merge rows on dim=1 (by column)
-w1 = torch.stack((w1[0], w1[1]), dim=1)
+def who_is_wayne(m):
+    w1 = model.layer1.weight
+    # stack to merge rows like row_1 -> col_1 with row_2 -> col_2 as a single row
+    # print w1 in case you need an explanation!
+    w1 = torch.stack((w1[0], w1[1]), dim=1)
 
-b1 = model.layer1.bias
+    b1 = model.layer1.bias
 
-vectors = w1 + b1
+    # word vectors
+    vectors = w1 + b1
 
-cos = nn.CosineSimilarity(dim=0)
+    print("")
+    print("Preparing vectors")
 
-bat_wayne = cos(vectors[p.int_labels["american"]], vectors[p.int_labels["batman"]])
-print(bat_wayne)
-joker_wayne = cos(vectors[p.int_labels["wayne"]], vectors[p.int_labels["joker"]])
-print(joker_wayne)
+    # cosine similarity to check how similar two vectors are
+    cos = nn.CosineSimilarity(dim=0)
 
-print(bat_wayne > joker_wayne)
+    bat_wayne = cos(vectors[p.int_labels["wayne"]], vectors[p.int_labels["batman"]])
+    joker_wayne = cos(vectors[p.int_labels["wayne"]], vectors[p.int_labels["joker"]])
+
+    identity = "batman" if bat_wayne > joker_wayne else "joker"
+    print("======================================")
+    print(f"The Skynet says : Wayne is {identity}")
+
+
+who_is_wayne(model)
