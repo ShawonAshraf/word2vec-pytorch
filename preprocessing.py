@@ -71,18 +71,16 @@ class Preprocessor(object):
         for s in tokenized_sentences:
             for idx, word in enumerate(s):
                 # find neighboring words / context based on the dimensions (how many words to relate to)
-                context = []
                 for neighbor in s[max(idx - self.dimensions, 0): min(idx + self.dimensions, len(s) + 1)]:
                     if neighbor != word:
-                        context.append(neighbor)
-                data.append([word, context])
+                        data.append([word, neighbor])
 
         columns = ["focus_word", "context"]
         df = pd.DataFrame(data, columns=columns)
         return df
 
     def __one_hot_encode_word(self, word):
-        one_hot = np.zeros(len(self.vocabulary))
+        one_hot = np.zeros(len(self.vocabulary), dtype=np.float32)
         word_idx_in_vocab = self.int_labels[word]
         one_hot[word_idx_in_vocab] = 1
 
@@ -95,13 +93,11 @@ class Preprocessor(object):
         for focus_word, context in zip(df["focus_word"], df["context"]):
             focus_words.append(self.__one_hot_encode_word(focus_word))
 
-            # for context words
-            encoded_context = []
-            for ctx in context:
-                encoded_context.append(self.__one_hot_encode_word(ctx))
-            contexts.append(np.array(encoded_context, dtype=np.float32))
+            # for context word
+            encoded_context = self.__one_hot_encode_word(context)
+            contexts.append(encoded_context)
 
-        return focus_words, contexts
+        return np.array(focus_words, dtype=np.float32), np.array(contexts, dtype=np.float32)
 
     def __pipeline(self):
         self.__read_corpus_from_file()
