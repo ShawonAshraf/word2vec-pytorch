@@ -99,7 +99,7 @@ class Preprocessor(object):
             encoded_context = []
             for ctx in context:
                 encoded_context.append(self.__one_hot_encode_word(ctx))
-            contexts.append(np.array(encoded_context))
+            contexts.append(np.array(encoded_context, dtype=np.float32))
 
         return focus_words, contexts
 
