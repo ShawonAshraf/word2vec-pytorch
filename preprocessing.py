@@ -2,6 +2,11 @@ import pandas as pd
 import os
 import numpy as np
 
+"""
+Preprocessor to process text for the Neural Network.
+Uses the skipgram approach (target -> context/neighborhood detection)
+"""
+
 
 class Preprocessor(object):
     def __init__(self, dimensions):
@@ -38,6 +43,7 @@ class Preprocessor(object):
         # update
         self.corpus = cleaned_corpus
 
+    # remove . and ,
     def __remove_punc(self):
         cpr = []
         for text in self.corpus:
@@ -80,6 +86,7 @@ class Preprocessor(object):
         df = pd.DataFrame(data, columns=columns)
         return df
 
+    # one hot encode a single word
     def __one_hot_encode_word(self, word):
         one_hot = np.zeros(len(self.vocabulary), dtype=np.float32)
         word_idx_in_vocab = self.int_labels[word]
@@ -87,6 +94,7 @@ class Preprocessor(object):
 
         return one_hot
 
+    # one hot encode all words in the generated data frame
     def __one_hot_encode_df(self, df):
         focus_words = []
         contexts = []
@@ -100,6 +108,7 @@ class Preprocessor(object):
 
         return np.array(focus_words, dtype=np.float32), np.array(contexts, dtype=np.float32)
 
+    # runs all the steps sequentially
     def __pipeline(self):
         self.__read_corpus_from_file()
         self.__clean()
@@ -109,5 +118,6 @@ class Preprocessor(object):
         focus_words, contexts = self.__one_hot_encode_df(df=data_frame)
         return data_frame, focus_words, contexts
 
+    # the method to call!
     def run(self):
         return self.__pipeline()
