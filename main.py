@@ -11,8 +11,7 @@ model = train(
     embedding_dimension=2,
     learning_rate=0.1,
     focus_words=focus_words,
-    contexts=contexts,
-    tr=False
+    contexts=contexts
 )
 
 

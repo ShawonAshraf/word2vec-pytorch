@@ -7,14 +7,11 @@ import os
 
 class Word2VecNetwork(nn.Module):
     # embedding_dimension -> hidden layer dimension
-    def __init__(self, input_dimension, embedding_dimension, epochs, learning_rate):
+    def __init__(self, input_dimension, embedding_dimension):
         super(Word2VecNetwork, self).__init__()
 
         self.input_dimension = input_dimension
         self.embedding_dimension = embedding_dimension
-
-        self.epochs = epochs
-        self.learning_rate = learning_rate
 
         # define layers
         self.layer1 = nn.Linear(input_dimension, embedding_dimension)
@@ -28,11 +25,20 @@ class Word2VecNetwork(nn.Module):
         return out
 
 
-def train(input_dimension, embedding_dimension, learning_rate, focus_words, contexts, epochs=20000, tr=True):
+"""
+Trains the neural network
+optimizer : SGD
+loss : cross entropy, or you can use negative log likelihood by adding an extra layer after the final
+        layer to the log likelihood, as mentioned in - 
+        https://pytorch.org/docs/stable/generated/torch.nn.NLLLoss.html
+"""
+
+
+def train(input_dimension, embedding_dimension, learning_rate, focus_words, contexts, epochs=20000):
     # init device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    model = Word2VecNetwork(input_dimension, embedding_dimension, epochs, learning_rate)
+    model = Word2VecNetwork(input_dimension, embedding_dimension)
 
     print("Model Description")
     print("=================")
@@ -40,12 +46,6 @@ def train(input_dimension, embedding_dimension, learning_rate, focus_words, cont
     print("=================")
     print(f"Device : {device}")
     print()
-
-    # if the model already exists on disk and tr is false, just return it!
-    if os.path.exists("model.ckpt") and tr is False:
-        print("Model already exists! Skipping training")
-        model.load_state_dict(torch.load("model.ckpt"))
-        return model
 
     # loss and optimization
     criterion = nn.CrossEntropyLoss()
@@ -68,8 +68,5 @@ def train(input_dimension, embedding_dimension, learning_rate, focus_words, cont
         # print loss for every 3000 steps
         if e % 3000 == 0:
             print(f"epoch = [{e}/{epochs}] # loss = {loss.item()}")
-
-    # save the model
-    torch.save(model.state_dict(), "model.ckpt")
 
     return model
